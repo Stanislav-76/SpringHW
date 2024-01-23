@@ -49,11 +49,13 @@ public class IssueService {
     return issueRepository.getIssuesById(id);
   }
 
+  public Object getIssues() {
+    return  issueRepository.getIssues();
+  }
+
   public void returnBook(long issueId) {
     // найти в репозитории выдачу и проставить ей returned_at
     issueRepository.returnBook(issueId);
   }
-
-
 
 }

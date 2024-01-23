@@ -53,7 +53,6 @@ public class UIController {
         model.addAttribute("issues", issueService.getIssues());
         model.addAttribute("books", bookService.getBooks());
         model.addAttribute("readers", readerService.getReaders());
-
         return "issue";
     }
 
