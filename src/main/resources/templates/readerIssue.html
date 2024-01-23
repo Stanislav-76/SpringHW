@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> ReaderIssues</title>
+</head>
+<body>
+    <h1 th:text="'Id=' + ${id} + ' ' + ${name}"></h1>
+    <table>
+        <tr>
+            <th>Название книги</th>
+        </tr>
+        <tr th:each="issue: ${issues}">
+<!--            <td th:text="${books[issue.bookId - 1].getName()}"></td>-->
+            <td th:each="book: ${books}" th:if="${book.id == issue.bookId}" th:text="${book.name}"></td>
+        </tr>
+    </table>
+</body>
+</html>

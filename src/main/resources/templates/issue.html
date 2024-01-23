@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Issues</title>
+</head>
+<body>
+    <h1>Issues</h1>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>BookId</th>
+            <th>ReaderID</th>
+            <th>Дата выдачи</th>
+            <th>Дата возврата</th>
+        </tr>
+        <tr th:each="issue: ${issues}">
+            <td th:text="${issue.getId()}"></td>
+            <td th:text="${issue.getBookId()}"></td>
+            <!--            <td th:text="${books[issue.getBookId - 1].getName()}"></td>-->
+            <td th:text="${issue.getReaderId()}"></td>
+            <!--            <td th:text="${readers[issue.getReaderId - 1].getName()}"></td>-->
+            <td th:text="${#temporals.format(issue.getIssued_at(), 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${#temporals.format(issue.getReturned_at(), 'dd-MM-yyyy HH:mm')}"></td>
+        </tr>
+    </table>
+    <table>
+        <h3>Вариант 2</h3>
+        <tr>
+            <th>Id</th>
+            <th>BookId</th>
+            <th>ReaderID</th>
+            <th>Дата выдачи</th>
+            <th>Дата возврата</th>
+        </tr>
+        <tr th:each="issue: ${issues}">
+            <td th:text="${issue.getId()}"></td>
+            <td th:each="book: ${books}" th:if="${book.id == issue.bookId}" th:text="${book.name}"></td>
+            <td th:each="reader: ${readers}" th:if="${reader.id == issue.readerId}" th:text="${reader.name}"></td>
+            <td th:text="${#temporals.format(issue.getIssued_at(), 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${#temporals.format(issue.getReturned_at(), 'dd-MM-yyyy HH:mm')}"></td>
+        </tr>
+    </table>
+</body>
+</html>
