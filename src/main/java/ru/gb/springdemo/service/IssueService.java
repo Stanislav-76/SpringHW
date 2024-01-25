@@ -3,15 +3,17 @@ package ru.gb.springdemo.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import ru.gb.springdemo.api.IssueRequest;
 import ru.gb.springdemo.model.Issue;
 import ru.gb.springdemo.repository.BookRepository;
 import ru.gb.springdemo.repository.IssueRepository;
 import ru.gb.springdemo.repository.ReaderRepository;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,14 +27,14 @@ public class IssueService {
   private int maxBooks;
 
   public Issue issue(IssueRequest request) {
-    if (bookRepository.getBookById(request.getBookId()) == null) {
+    if (bookRepository.findById(request.getBookId()).get() == null) {
       throw new NoSuchElementException("Не найдена книга с идентификатором \"" + request.getBookId() + "\"");
     }
-    if (readerRepository.getReaderById(request.getReaderId()) == null) {
+    if (readerRepository.findById(request.getReaderId()).get() == null) {
       throw new NoSuchElementException("Не найден читатель с идентификатором \"" + request.getReaderId() + "\"");
     }
     // можно проверить, что у читателя нет книг на руках (или его лимит не превышает в Х книг)
-    long countBook = issueRepository.getIssues().stream()
+    long countBook = issueRepository.findAll().stream()
             .filter(it -> Objects.equals(it.getReaderId(), request.getReaderId()))
             .toList()
             .size();
@@ -45,17 +47,19 @@ public class IssueService {
     return issue;
   }
 
-  public Issue getIssuesById(long id){
-    return issueRepository.getIssuesById(id);
+  public Optional<Issue> getIssuesById(long id){
+    return issueRepository.findById(id);
   }
 
-  public Object getIssues() {
-    return  issueRepository.getIssues();
+  public List<Issue> getIssues() {
+    return  issueRepository.findAll();
   }
 
   public void returnBook(long issueId) {
     // найти в репозитории выдачу и проставить ей returned_at
-    issueRepository.returnBook(issueId);
+    Issue issue = getIssuesById(issueId).get();
+    issue.setReturned_at(LocalDateTime.now());
+    issueRepository.save(issue);
   }
 
 }

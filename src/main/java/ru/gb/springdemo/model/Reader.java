@@ -1,21 +1,27 @@
 package ru.gb.springdemo.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
+@Entity
+@Table(name="readers")
 @Data
-@RequiredArgsConstructor
 public class Reader {
 
-  public static long sequence = 1L;
+  @Id
+  @GeneratedValue(strategy = IDENTITY)
+  private Long id;
+  @Column(name="name")
+  private String name;
 
-  private final long id;
-  private final String name;
+  public Reader() {}
 
-  @JsonCreator
   public Reader(String name) {
-    this(sequence++, name);
+    this.name = name;
   }
 
 }

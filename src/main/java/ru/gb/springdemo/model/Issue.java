@@ -1,37 +1,45 @@
 package ru.gb.springdemo.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.management.ConstructorParameters;
 import java.time.LocalDateTime;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 /**
  * Запись о факте выдачи книги (в БД)
  */
+@Entity
+@Table(name="Issues")
 @Data
 // @Entity
 public class Issue {
 
-  public static long sequence = 1L;
-
-  private final long id;
-  private final long bookId;
-  private final long readerId;
+  @Id
+  @GeneratedValue(strategy = IDENTITY)
+  private Long id;
+  @Column(name="bookId")
+  private Long bookId;
+  @Column(name="readerId")
+  private Long readerId;
 
   /**
    * Дата выдачи
    */
-  private final LocalDateTime issued_at;
-  private  LocalDateTime returned_at;
+  @Column(name="issued_at")
+  private final LocalDateTime issued_at= LocalDateTime.now();
+  @Column(name="returned_at")
+  private  LocalDateTime returned_at = null;
 
-  @JsonCreator
+  public Issue(){}
+
   public Issue(long bookId, long readerId) {
-    this.id = sequence++;
     this.bookId = bookId;
     this.readerId = readerId;
-    this.issued_at = LocalDateTime.now();
-    this.returned_at = null;
   }
 
 }

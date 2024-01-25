@@ -4,12 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.gb.springdemo.model.Issue;
 import ru.gb.springdemo.model.Reader;
-import ru.gb.springdemo.repository.ReaderRepository;
-import ru.gb.springdemo.service.IssueService;
 import ru.gb.springdemo.service.ReaderService;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/reader")
@@ -35,12 +33,23 @@ public class ReaderController {
 
     @PostMapping
     public Reader addReader(@RequestBody Reader reader) {
-        return service.addReader(reader);
+        return service.saveReader(reader);
+    }
+
+    @DeleteMapping
+    public String deleteAllReaders() {
+        service.deleteAllReaders();
+        return "All books have been deleted successfully.";
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReader(@PathVariable long id) {
-        service.deleteReader(id);
+    public String deleteReaderById(@PathVariable long id) {
+        if (service.deleteReaderById(id)) {
+            return "Reader with ID " + id + " has been deleted successfully.";
+        } else {
+            return "Reader with ID " + id + " not found.";
+        }
     }
+
 
 }

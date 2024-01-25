@@ -9,6 +9,7 @@ import ru.gb.springdemo.model.Issue;
 import ru.gb.springdemo.service.IssueService;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -41,7 +42,7 @@ public class IssueController {
   }
 
   @GetMapping("/{id}")
-  public Issue getIssue(@PathVariable long id){
+  public Optional<Issue> getIssue(@PathVariable long id){
     return service.getIssuesById(id);
   }
 

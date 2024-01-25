@@ -1,10 +1,8 @@
 package ru.gb.springdemo.service;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.gb.springdemo.model.Issue;
 import ru.gb.springdemo.model.Reader;
 import ru.gb.springdemo.repository.BookRepository;
@@ -13,6 +11,7 @@ import ru.gb.springdemo.repository.ReaderRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,23 +22,42 @@ public class ReaderService {
     private final IssueRepository issueRepository;
 
     public List<Reader> getReaders() {
-        return readerRepository.getReaders();
+        return readerRepository.findAll();
     }
 
     public Reader getReaderById(long id) {
-        return readerRepository.getReaderById(id);
+        return readerRepository.findById(id).get();
     }
 
     public List<Issue> getReaderIssues(long id) {
-        return issueRepository.getIssues().stream().filter(it -> Objects.equals(it.getReaderId(), id)).toList();
+        return issueRepository.findAll().stream().filter(it -> Objects.equals(it.getReaderId(), id)).toList();
     }
 
-    public Reader addReader(Reader reader) {
-        return readerRepository.addReader(reader);
+    public Reader saveReader(Reader reader) {
+        return readerRepository.save(reader);
     }
 
-    public void deleteReader(long id) {
-        readerRepository.deleteReader(id);
+    public void deleteAllReaders() {
+        readerRepository.deleteAll();
     }
+
+    public boolean deleteReaderById(Long id) {
+        Optional<Reader> readerOptional = readerRepository.findById(id);
+        if (readerOptional.isPresent()) {
+            readerRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @PostConstruct
+    public void generateData() {
+        readerRepository.saveAll(List.of(
+                new ru.gb.springdemo.model.Reader("Игорь"),
+                new ru.gb.springdemo.model.Reader("Виктор"),
+                new ru.gb.springdemo.model.Reader("Петр")
+        ));
+    }
+
 
 }
