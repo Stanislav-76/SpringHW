@@ -1,5 +1,6 @@
 package ru.gb.springdemo.api;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class IssueController {
   private IssueService service;
 
   @PostMapping
+  @Operation(summary = "add issue", description = "Добавляет выдачу читателю книги")
   public ResponseEntity<Issue> issueBook(@RequestBody IssueRequest request) {
     log.info("Получен запрос на выдачу: readerId = {}, bookId = {}", request.getReaderId(), request.getBookId());
 
@@ -36,12 +38,14 @@ public class IssueController {
   }
 
   @PutMapping("/{issueId}")
+  @Operation(summary = "set time for return book in issue", description = "Проставляет время возврата книги в выдаче")
   public void returnBook(@PathVariable long issueId) {
     // найти в репозитории выдачу и проставить ей returned_at
     service.returnBook(issueId);
   }
 
   @GetMapping("/{id}")
+  @Operation(summary = "get issue by id", description = "Загружает выдачу по id")
   public Optional<Issue> getIssue(@PathVariable long id){
     return service.getIssuesById(id);
   }
