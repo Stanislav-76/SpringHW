@@ -55,11 +55,11 @@ public class IssueService {
     return  issueRepository.findAll();
   }
 
-  public void returnBook(long issueId) {
+  public Issue returnBook(long issueId) {
     // найти в репозитории выдачу и проставить ей returned_at
     Issue issue = getIssuesById(issueId).get();
     issue.setReturned_at(LocalDateTime.now());
-    issueRepository.save(issue);
+    return issueRepository.save(issue);
   }
 
 }

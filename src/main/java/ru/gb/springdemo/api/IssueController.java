@@ -39,9 +39,9 @@ public class IssueController {
 
   @PutMapping("/{issueId}")
   @Operation(summary = "set time for return book in issue", description = "Проставляет время возврата книги в выдаче")
-  public void returnBook(@PathVariable long issueId) {
+  public Issue returnBook(@PathVariable long issueId) {
     // найти в репозитории выдачу и проставить ей returned_at
-    service.returnBook(issueId);
+    return service.returnBook(issueId);
   }
 
   @GetMapping("/{id}")
